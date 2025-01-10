@@ -4,7 +4,8 @@
 	"module": "index.ts",
 	"type": "module",
 	"scripts": {
-		"lint": "bunx biome check --write"
+		"lint": "bunx biome check --write",
+    "publish": "npm publish --scope=ezppfarm"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",

@@ -16,7 +16,7 @@ export class MutexLock {
 		this.redisClient = redisClient;
 	}
 
-	static async create(options: MutexOptions) {
+	static async create(options?: MutexOptions) {
 		const redisClient = await redis
 			.createClient({
 				url: `redis://${options?.redis?.host ?? "127.0.0.1"}:${options?.redis?.port ?? 6379}`,

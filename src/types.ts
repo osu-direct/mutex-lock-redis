@@ -1,7 +1,7 @@
 export type MutexOptions = {
-  redis: {
-    host: string;
-    port: number;
+  redis?: {
+    host?: string;
+    port?: number;
   };
   mutex?: {
     checkInterval?: number;

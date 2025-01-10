@@ -9,9 +9,9 @@ type RedisClient = redis.RedisClientType<
 
 export class MutexLock {
 	redisClient: RedisClient;
-	mutexOptions: MutexOptions;
+	mutexOptions: MutexOptions | undefined;
 
-	constructor(redisClient: RedisClient, options: MutexOptions) {
+	constructor(redisClient: RedisClient, options?: MutexOptions) {
 		this.mutexOptions = options;
 		this.redisClient = redisClient;
 	}
@@ -19,7 +19,7 @@ export class MutexLock {
 	static async create(options: MutexOptions) {
 		const redisClient = await redis
 			.createClient({
-				url: `redis://${options.redis?.host ?? "127.0.0.1"}:${options.redis?.port ?? 6379}`,
+				url: `redis://${options?.redis?.host ?? "127.0.0.1"}:${options?.redis?.port ?? 6379}`,
 			})
 			.connect();
 
@@ -40,12 +40,12 @@ export class MutexLock {
 			if (acquired) {
 				await this.redisClient.expire(
 					lockIdentifier, 
-					this.mutexOptions.mutex?.ttl || 60
+					this.mutexOptions?.mutex?.ttl || 60
 				);
 				return releaseFunc;
 			}
 			await new Promise(resolve => 
-				setTimeout(resolve, this.mutexOptions.mutex?.checkInterval || 100)
+				setTimeout(resolve, this.mutexOptions?.mutex?.checkInterval || 100)
 			);
 		}
 	}}

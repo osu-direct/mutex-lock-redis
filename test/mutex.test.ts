@@ -4,12 +4,7 @@ import { MutexLock } from "../src/MutexLock";
 test(
 	"redis mutex",
 	async () => {
-		const mutexLock = await MutexLock.create({
-			redis: {
-				host: "127.0.0.1",
-				port: 6379,
-			},
-		});
+		const mutexLock = await MutexLock.create();
 
 		const testLock = async () => {
 			const release = await mutexLock.obtainLock("test");

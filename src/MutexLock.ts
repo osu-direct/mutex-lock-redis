@@ -31,21 +31,22 @@ export class MutexLock {
 		const releaseFunc = async () => {
 			await this.redisClient.del(lockIdentifier);
 		};
-		
+
+		let ttl = this.mutexOptions?.mutex?.ttl || 60;
+		if (ttl <= 0) ttl = 60;
+
 		while (true) {
 			const acquired = await this.redisClient.set(lockIdentifier, "1", {
-				NX: true
+				NX: true,
+				EX: ttl,
 			});
-			
+
 			if (acquired) {
-				await this.redisClient.expire(
-					lockIdentifier, 
-					this.mutexOptions?.mutex?.ttl || 60
-				);
 				return releaseFunc;
 			}
-			await new Promise(resolve => 
-				setTimeout(resolve, this.mutexOptions?.mutex?.checkInterval || 100)
+			await new Promise((resolve) =>
+				setTimeout(resolve, this.mutexOptions?.mutex?.checkInterval || 100),
 			);
 		}
-	}}
+	}
+}
